@@ -1,0 +1,3 @@
+9/2/2023 11:29:30 AM	 Drafted basic writer
+9/2/2023 11:30:51 AM	 Append test
+9/2/2023 11:33:18 AM	 moved change log location
