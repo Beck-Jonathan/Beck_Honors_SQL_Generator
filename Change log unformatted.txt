@@ -1,0 +1,8 @@
+changed default options for each table
+fixed error where the last table was not being added properly
+add code to make each line be read properly (15 pieces)
+fixed spacing issue after comment box
+fixed default options
+need to fix error where both rows are primary keys/foreign keys to block update, delete, etc
+
+

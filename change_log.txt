@@ -7,3 +7,7 @@
 9/2/2023 11:50:20 AM	 activated choose file button
 9/2/2023 11:52:51 AM	 updated initial directory of file explorer
 9/2/2023 11:54:37 AM	 Implmented  data object and file readcode from previous semesters project 
+9/3/2023 4:52:18 PM	 added use case folder
+9/3/2023 4:56:46 PM	 added professor Trapp to github repository
+9/3/2023 4:57:02 PM	 Changed logic for saving to file
+9/3/2023 4:57:09 PM	 test logic for saving to file

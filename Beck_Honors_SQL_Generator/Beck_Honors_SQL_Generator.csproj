@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="use_cases\" />
     <Folder Include="Text_files\" />
   </ItemGroup>
 

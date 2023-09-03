@@ -15,7 +15,7 @@ namespace Beck_Honors_SQL_Generator
         {
             String append = DateTime.Now.ToString() + "\t " + s;
             writer.WriteLine(append);
-            writer.Close();
+            writer.Flush();
 
             return true;
         }
