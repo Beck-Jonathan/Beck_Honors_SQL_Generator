@@ -39,7 +39,7 @@ namespace Beck_Honors_SQL_Generator
             string description;
             char[] separator = { '\t' };
             char[] audit_seperator = { ' ' };
-            List<Row> rows = new List<Row>();
+            List<Column> rows = new List<Column>();
             int count = 0;
             SqlBuddy.ReadLine(); //skip first line since it's just heading data
             while ((ln = SqlBuddy.ReadLine()) != null)
@@ -72,12 +72,12 @@ namespace Beck_Honors_SQL_Generator
                     table t = new table(tablename, rows);
                     header h = new header(tablename, parts[14]);
                     t.Header = h;
-                    List<Row> rowsfortable = new List<Row>();
-                    foreach (Row _row in t.rows)
+                    List<Column> rowsfortable = new List<Column>();
+                    foreach (Column _column in t.columns)
                     {
-                        rowsfortable.Add(_row);
+                        rowsfortable.Add(_column);
                     }
-                    t.rows = rowsfortable;
+                    t.columns = rowsfortable;
 
                     rows.Clear();
                     tablename = parts[0];
@@ -87,7 +87,7 @@ namespace Beck_Honors_SQL_Generator
                 }
                 if (parts[1].Length > 0)
                 {
-                    String row_name = parts[0].Replace("\"", "");
+                    String column_name = parts[0].Replace("\"", "");
                     int length;
                     int start;
                     int increment;
@@ -125,13 +125,19 @@ namespace Beck_Honors_SQL_Generator
                     String references = parts[13];
 
                     description = parts[14];
-                    Row _row = new Row(row_name, data_type, length, default_value, identity, start, increment,
+                    Column _row = new Column(column_name, data_type, length, default_value, identity, start, increment,
                          nullable, index, unique, primary_key, foreign_key, integrity, references, description);
                     rows.Add(_row);
                 }
 
             }
         }
+    }
+    public static class file_write
+    {
+        //the output file is in the same folder as the input folder, just with "sql" appended to the file name
+        static string newPath = settings.path.Substring(0, settings.path.Length - 4) + "sql.txt";
+        public static StreamWriter WriteBuddy = new StreamWriter(newPath);
     }
 }
 

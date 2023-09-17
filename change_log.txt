@@ -11,3 +11,9 @@
 9/3/2023 4:56:46 PM	 added professor Trapp to github repository
 9/3/2023 4:57:02 PM	 Changed logic for saving to file
 9/3/2023 4:57:09 PM	 test logic for saving to file
+9/17/2023 10:05:37 AM	 starting up for the day
+9/17/2023 10:18:29 AM	 Changed row vocab to column vocab
+9/17/2023 10:19:57 AM	 added commente box gen code
+9/17/2023 10:21:42 AM	 added database class
+9/17/2023 10:21:52 AM	 add settings.database_name 
+9/17/2023 10:23:03 AM	 added data_access.file_write class
