@@ -33,23 +33,27 @@ namespace Beck_Honors_SQL_Generator
         public static void readdata()
         {
             int skip_count = 0;
+            // Read the file selected by user and setup various varables
             StreamReader SqlBuddy = new StreamReader(settings.path);
             string ln;
             string tablename = " ";
             string description;
             char[] separator = { '\t' };
             char[] audit_seperator = { ' ' };
-            List<Column> rows = new List<Column>();
+            List<Column> Columns = new List<Column>();
             int count = 0;
-            SqlBuddy.ReadLine(); //skip first line since it's just heading data
+            SqlBuddy.ReadLine();
+            //skip first line since it's just heading data
+            // read until the end
             while ((ln = SqlBuddy.ReadLine()) != null)
             {
 
                 string[] parts;
+                //split each line in the file into it's component parts
                 parts = ln.Split(separator);
                 try
                 {
-                    
+                    //catch a fully blank line and ignore it
                     if (parts[0].Length == 0 && parts[1].Length == 0)
                     {
                         skip_count++;
@@ -57,37 +61,49 @@ namespace Beck_Honors_SQL_Generator
 
                     }
                 }
-                catch { Exception e; } 
+                catch { IndexOutOfRangeException e; }
 
-            
 
-                if (parts[1].Length == 0 && count == 0)
+                try
                 {
-                    tablename = parts[0];
-                    description = parts[14];
-                    count++;
-                }
-                else if (parts[1].Length == 0 && count > 0)
-                {
-                    table t = new table(tablename, rows);
-                    header h = new header(tablename, parts[14]);
-                    t.Header = h;
-                    List<Column> rowsfortable = new List<Column>();
-                    foreach (Column _column in t.columns)
+                    //parts[1] is blank for the first Column of a table, so this catches the table name
+                    if (parts[1].Length == 0 && count == 0)
                     {
-                        rowsfortable.Add(_column);
-                    }
-                    t.columns = rowsfortable;
 
-                    rows.Clear();
-                    tablename = parts[0];
-                    description = parts[14];
-                    data_tables.all_tables.Add(t);
-                    count++;
+                        tablename = parts[0];
+                        description = parts[14];
+                        count++;
+                    }
+
+                    //this means we are moving onto a new table, so it creates the old table, then clears the Columns array
+
+                    else if (parts[1].Length == 0 && count > 0)
+                    {
+                        table t = new table(tablename, Columns);
+                        header h = new header(tablename, parts[14]);
+                        t.Header = h;
+                        List<Column> Columnsfortable = new List<Column>();
+                        foreach (Column _Column in t.columns)
+                        {
+                            Columnsfortable.Add(_Column);
+                        }
+                        t.columns = Columnsfortable;
+
+                        Columns.Clear();
+                        tablename = parts[0];
+                        description = parts[14];
+                        data_tables.all_tables.Add(t);
+                        count++;
+                    }
                 }
+                catch { IndexOutOfRangeException ex; }
+                //if parts[1] is greater than zero, that means we are reading a Column object which has a data type. 
+                //read all Column objects and place them into an array of Columns, to later be turned into a table
+
                 if (parts[1].Length > 0)
                 {
-                    String column_name = parts[0].Replace("\"", "");
+                    //remove any extra punctionation excel added and setup various variables
+                    String Column_name = parts[0].Replace("\"", "");
                     int length;
                     int start;
                     int increment;
@@ -95,7 +111,8 @@ namespace Beck_Honors_SQL_Generator
                     char unique = ' ';
                     char primary_key = ' ';
 
-                    String data_type = parts[1];
+                    //read each part of the Column 
+                    String data_type = parts[1].Replace("\"", "");
                     Int32.TryParse(parts[2], out length);
                     String default_value = parts[3];
                     String identity = parts[4];
@@ -125,12 +142,18 @@ namespace Beck_Honors_SQL_Generator
                     String references = parts[13];
 
                     description = parts[14];
-                    Column _row = new Column(column_name, data_type, length, default_value, identity, start, increment,
+                    //create the Column
+                    Column _Column = new Column(Column_name, data_type, length, default_value, identity, start, increment,
                          nullable, index, unique, primary_key, foreign_key, integrity, references, description);
-                    rows.Add(_row);
+                    //add Column to Column array
+                    Columns.Add(_Column);
                 }
 
             }
+            //figure out how many tables were created
+            settings.table_count = data_tables.all_tables.Count;
+            //generate default options for all tables
+            settings.generate_options();
         }
     }
     public static class file_write

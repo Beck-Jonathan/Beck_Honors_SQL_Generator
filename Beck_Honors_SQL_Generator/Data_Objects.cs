@@ -38,7 +38,7 @@ namespace Beck_Honors_SQL_Generator
             public String references { get; set; }
             public String description { get; set; }
 
-            public String row_text { get; set; }
+            public String Column_text { get; set; }
             public List<String> primary_keys { set; get; }
             public List<String> foreign_keys { set; get; }
             public String length_text = "";
@@ -78,30 +78,30 @@ namespace Beck_Honors_SQL_Generator
             {
                 primary_keys = new List<String>();
                 foreign_keys = new List<String>();
-                String row_text = "";
-                row_text = row_text + column_name + "\t";
-                row_text = row_text + data_type + length_text + "\t";
-                if (nullable.Equals('Y') || nullable.Equals('y')) { row_text = row_text + "null\t"; }
-                else { row_text = row_text + "not null\t"; }
-                //if (auto_increment.Equals('Y') || auto_increment.Equals('y')) { row_text = row_text + "auto_increment\t"; }
-                if (unique.Equals('Y') || unique.Equals('y')) { row_text = row_text + "unique\t"; }
+                String Column_text = "";
+                Column_text = Column_text + column_name + "\t";
+                Column_text = Column_text + data_type + length_text + "\t";
+                if (nullable.Equals('Y') || nullable.Equals('y')) { Column_text = Column_text + "null\t"; }
+                else { Column_text = Column_text + "not null\t"; }
+                //if (auto_increment.Equals('Y') || auto_increment.Equals('y')) { Column_text = Column_text + "auto_increment\t"; }
+                if (unique.Equals('Y') || unique.Equals('y')) { Column_text = Column_text + "unique\t"; }
                 if (primary_key.Equals('Y') || primary_key.Equals('y')) { primary_keys.Add(column_name); }
                 if (foreign_key.Length > 1) { foreign_keys.Add(foreign_key); }
-                row_text = row_text + "comment \'" + description + "\'\n";
-                return row_text;
+                Column_text = Column_text + "comment \'" + description + "\'\n";
+                return Column_text;
 
             }
 
             public String audit_column_gen()
             {
-                String row_text = "";
-                row_text = row_text + column_name + "\t";
-                row_text = row_text + data_type + length_text + "\t";
-                if (nullable.Equals('Y') || nullable.Equals('y')) { row_text = row_text + "null\t"; }
-                else { row_text = row_text + "not null\t"; }
-                if (unique.Equals('Y') || unique.Equals('y')) { row_text = row_text + "unique\t"; }
-                row_text = row_text + "comment \'" + description + "\'\n";
-                return row_text;
+                String Column_text = "";
+                Column_text = Column_text + column_name + "\t";
+                Column_text = Column_text + data_type + length_text + "\t";
+                if (nullable.Equals('Y') || nullable.Equals('y')) { Column_text = Column_text + "null\t"; }
+                else { Column_text = Column_text + "not null\t"; }
+                if (unique.Equals('Y') || unique.Equals('y')) { Column_text = Column_text + "unique\t"; }
+                Column_text = Column_text + "comment \'" + description + "\'\n";
+                return Column_text;
 
 
             }
@@ -114,7 +114,7 @@ namespace Beck_Honors_SQL_Generator
             public List<Column> columns { set; get; }
             public List<String> primary_keys { set; get; }
             public List<String> foreign_keys { set; get; }
-            public table(String name, List<Column> rows)
+            public table(String name, List<Column> Columns)
             {
                 this.name = name;
                 this.columns = columns;
@@ -184,9 +184,9 @@ namespace Beck_Honors_SQL_Generator
                 x = x + "\n";
                 foreach (Column c in columns)
                 {
-                    String rowtext = c.column_and_key_gen();
+                    String Columntext = c.column_and_key_gen();
                     if (count > 0) { x = x + ","; }
-                    x = x + rowtext;
+                    x = x + Columntext;
                     count++;
                 }
                 ;
@@ -268,7 +268,7 @@ namespace Beck_Honors_SQL_Generator
                 }
                 function_text = function_text + "\n" +
                    " ; if sql_error = FALSE then \n" +
-                   " SET update_count = row_count(); \n" +
+                   " SET update_count = Column_count(); \n" +
                    " COMMIT;\n" +
                    " ELSE\n" +
                    " SET update_count = 0;\n" +
@@ -331,7 +331,7 @@ namespace Beck_Honors_SQL_Generator
                 }
                 function_text = function_text + "\n" +
                    " ; if sql_error = FALSE then \n" +
-                   " SET update_count = row_count(); \n" +
+                   " SET update_count = Column_count(); \n" +
                    " COMMIT;\n" +
                    " ELSE\n" +
                    " SET update_count = 0;\n" +
@@ -474,7 +474,7 @@ namespace Beck_Honors_SQL_Generator
 
                 function_text = function_text + ")\n" +
                    " ; if sql_error = FALSE then \n" +
-                   " SET update_count = row_count(); \n" +
+                   " SET update_count = Column_count(); \n" +
                    " COMMIT;\n" +
                    " ELSE\n" +
                    " SET update_count = 0;\n" +
@@ -497,7 +497,7 @@ namespace Beck_Honors_SQL_Generator
                     + "DROP TRIGGER IF EXISTS tr_" + name + "_after_update $$\n"
                     + "CREATE TRIGGER tr_" + name + "_after_update\n"
                     + "AFTER UPDATE ON " + name + "\n"
-                    + "for each row\n"
+                    + "for each Column\n"
                     + "begin\n"
                     + "insert into" + name + "_audit (\n";
                 int count = 0;
@@ -541,7 +541,7 @@ namespace Beck_Honors_SQL_Generator
                     + "DROP TRIGGER IF EXISTS tr_" + name + "_after_insert $$\n"
                     + "CREATE TRIGGER tr_" + name + "_after_insert\n"
                     + "AFTER insert ON " + name + "\n"
-                    + "for each row\n"
+                    + "for each Column\n"
                     + "begin\n"
                     + "insert into" + name + "_audit (\n";
                 int count = 0;
@@ -586,7 +586,7 @@ namespace Beck_Honors_SQL_Generator
                     + "DROP TRIGGER IF EXISTS tr_" + name + "_after_delete $$\n"
                     + "CREATE TRIGGER tr_" + name + "_after_delete\n"
                     + "AFTER delete ON " + name + "\n"
-                    + "for each row\n"
+                    + "for each Column\n"
                     + "begin\n"
                     + "insert into" + name + "_audit (\n";
                 int count = 0;

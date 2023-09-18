@@ -17,3 +17,7 @@
 9/17/2023 10:21:42 AM	 added database class
 9/17/2023 10:21:52 AM	 add settings.database_name 
 9/17/2023 10:23:03 AM	 added data_access.file_write class
+9/18/2023 1:09:06 PM	 Added comments to file read,
+9/18/2023 1:09:16 PM	 Fixed enum error
+9/18/2023 1:09:29 PM	 added settings.table count to keep track of how many tables I have
+9/18/2023 1:09:55 PM	 added placeholder method settings.generatesettings()
