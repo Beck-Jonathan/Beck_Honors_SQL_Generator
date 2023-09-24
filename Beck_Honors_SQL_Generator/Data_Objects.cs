@@ -7,14 +7,20 @@ namespace Beck_Honors_SQL_Generator
     {
         public static class database
         {
-            public static String print_database_header()
+            public static List<table> allTables = new List<table>();
+            public static String printDBHeader()
             {
                 //Databae header to ensure we don't run into conflicts.
-                String database_name = settings.database_name;
+                String database_name = settings.databaseName;
                 String header_text = "DROP DATABASE IF EXISTS " + database_name + ";\n"
                     + "CREATE DATABASE " + database_name + ";\n"
                     + "USE " + database_name + ";\n";
                 return header_text;
+            }
+            
+            public static int tableCount() {
+                return allTables.Count;
+
             }
         }
         public class Column
@@ -636,14 +642,7 @@ namespace Beck_Honors_SQL_Generator
                 return full_text;
             }
 
-            public String gen_functions()
-            {
-                string x = " ";
-
-                return x;
-
-
-            }
+            
 
         }
         public class header
@@ -685,10 +684,7 @@ namespace Beck_Honors_SQL_Generator
             }
 
         }
-        public class data_tables
-        {
-            public static List<table> all_tables = new List<table>();
-        }
+        
         public class comment_box_gen
         {
             //creates various commeent boxes based on table name and function type.

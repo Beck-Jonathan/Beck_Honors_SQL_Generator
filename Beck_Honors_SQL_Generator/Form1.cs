@@ -20,7 +20,7 @@ namespace Beck_Honors_SQL_Generator
             openFileDialog.InitialDirectory = "C:\\Users\\jjbec\\source\\repos\\Beck_Honors_SQL_Generator\\Beck_Honors_SQL_Generator\\Text_files\\";
             openFileDialog.ShowDialog();
             string filepath = openFileDialog.FileName;
-            settings.path = filepath;
+            settings.applicationPath = filepath;
         }
     }
 }

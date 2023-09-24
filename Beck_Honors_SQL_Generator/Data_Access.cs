@@ -29,13 +29,13 @@ namespace Beck_Honors_SQL_Generator
     }
     public class file_read
     {
-        String readpath = settings.path;
+        String readpath = settings.applicationPath;
 
         public static void readdata()
         {
             int skip_count = 0;
             // Read the file selected by user and setup various varables
-            StreamReader SqlBuddy = new StreamReader(settings.path);
+            StreamReader SqlBuddy = new StreamReader(settings.applicationPath);
             string ln;
             string tablename = " ";
             string description;
@@ -93,7 +93,7 @@ namespace Beck_Honors_SQL_Generator
                         Columns.Clear();
                         tablename = parts[0];
                         description = parts[14];
-                        data_tables.all_tables.Add(t);
+                        database.allTables.Add(t);
                         count++;
                     }
                 }
@@ -149,7 +149,7 @@ namespace Beck_Honors_SQL_Generator
 
             }
             //figure out how many tables were created
-            settings.table_count = data_tables.all_tables.Count;
+            //settings.table_count = data_tables.all_tables.Count;
             //generate default options for all tables
             settings.generate_options();
         }
@@ -157,7 +157,7 @@ namespace Beck_Honors_SQL_Generator
     public static class file_write
     {
         //the output file is in the same folder as the input folder, just with "sql" appended to the file name
-        static string newPath = settings.path.Substring(0, settings.path.Length - 4) + "sql.txt";
+        static string newPath = settings.applicationPath.Substring(0, settings.applicationPath.Length - 4) + "sql.txt";
         public static StreamWriter WriteBuddy = new StreamWriter(newPath);
     }
 }
