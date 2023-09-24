@@ -1,4 +1,5 @@
-﻿using static Beck_Honors_SQL_Generator.Data_Objects;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using static Beck_Honors_SQL_Generator.Data_Objects;
 
 namespace Beck_Honors_SQL_Generator
 {
@@ -107,44 +108,41 @@ namespace Beck_Honors_SQL_Generator
                     int length;
                     int start;
                     int increment;
-                    char nullable = ' ';
-                    char unique = ' ';
-                    char primary_key = ' ';
+                    
 
                     //read each part of the Column 
                     String data_type = parts[1].Replace("\"", "");
                     Int32.TryParse(parts[2], out length);
                     String default_value = parts[3];
-                    String identity = parts[4];
+                    Boolean isIdentity = false;
+                    Boolean isNullable = false;
+                    Boolean isUnique = false;
+                    Boolean isPrimaryKey= false;
+                    Boolean isForeignKey = false;
+                    if (parts[4].Equals("y") || parts[4].Equals("Y")) { isIdentity = true; }
+                    
                     Int32.TryParse(parts[5], out start);
                     Int32.TryParse(parts[6], out increment);
-                    char[] chararray = parts[7].ToCharArray();
-                    if (chararray.Length != 0)
-                    {
-                        nullable = chararray[0];
-                    }
+
+                    //nullable relates to parts 7
+                    if (parts[7].Equals("y") || parts[7].Equals("Y")) { isNullable = true; }
+                    String index = parts[8];
+                    //unique relates to parts 9
+                    if (parts[9].Equals("y") || parts[9].Equals("Y")) { isUnique = true; }
+                    //pk relates to parts 10
+                    if (parts[10].Equals("y") || parts[10].Equals("Y")) { isPrimaryKey = true; }
+                    //fk releates to parts 11
+                    if (parts[11].Equals("y") || parts[11].Equals("Y")) { isForeignKey = true; }
 
 
-                    string index = parts[8];
-                    char[] chararray2 = parts[9].ToCharArray();
-                    if (chararray2.Length != 0)
-                    {
-                        unique = chararray2[0];
-                    }
-                    char[] chararray3 = parts[10].ToCharArray();
-                    if (chararray3.Length != 0)
-                    {
-                        primary_key = chararray3[0];
-                    }
 
-                    String foreign_key = parts[11];
                     String integrity = parts[12];
                     String references = parts[13];
 
                     description = parts[14];
                     //create the Column
-                    Column _Column = new Column(Column_name, data_type, length, default_value, identity, start, increment,
-                         nullable, index, unique, primary_key, foreign_key, integrity, references, description);
+                    Column _Column = new Column(Column_name, data_type, length, default_value, isIdentity, start, increment,
+                         isNullable, index, isUnique, isPrimaryKey, isForeignKey, integrity, references, description);
                     //add Column to Column array
                     Columns.Add(_Column);
                 }

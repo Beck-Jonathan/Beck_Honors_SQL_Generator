@@ -24,69 +24,66 @@ namespace Beck_Honors_SQL_Generator
             public String data_type { get; set; }
             public int length { get; set; }
             public String default_value { get; set; }
-            public String identity { get; set; }
-            public int start { get; set; }
-            public int increment { get; set; }
+            public Boolean isIidentity { get; set; }
+            public int id_start { get; set; }
+            public int id_increment { get; set; }
 
-            public char nullable { get; set; }
+            public Boolean isNullable { get; set; }
             public string index { get; set; }
 
-            public char unique { get; set; }
-            public char primary_key { get; set; }
-            public String foreign_key { get; set; }
+            public Boolean isUnique { get; set; }
+            public Boolean isPrimaryKey { get; set; }
+            public Boolean isForeignKey { get; set; }
             public String integrity { get; set; }
-            public String references { get; set; }
+            public String fkReferences { get; set; }
             public String description { get; set; }
 
-            public String Column_text { get; set; }
-            public List<String> primary_keys { set; get; }
-            public List<String> foreign_keys { set; get; }
-            public String length_text = "";
+            public String columnText{ get; set; }
+            public List<String> primaryKeys { set; get; }
+            public List<String> foreignKeys { set; get; }
+            //public String length_text = "";
 
 
-            public Column(string column_name, string data_type, int length, string default_value, string identity, int start, int increment,
-                char nullable, string index, char unique, char primary_key, string foreign_key, string integrity, string references, string description)
+
+            public Column(string column_name, string data_type, int length, string default_value, Boolean identity, int id_start, int id_increment,
+                Boolean nullable, string index, Boolean unique, Boolean primary_key, Boolean foreign_key, string integrity, string references, string description)
             {
                 this.column_name = column_name;
                 this.data_type = data_type;
                 this.length = length;
                 this.default_value = default_value;
-                this.identity = identity;
-                this.start = start;
-                this.increment = increment;
-                this.nullable = nullable;
+                this.isIidentity = identity;
+                this.id_start = id_start;
+                this.id_increment = id_increment;
+                this.isNullable = nullable;
                 this.index = index;
-                this.unique = unique;
-                this.primary_key = primary_key;
-                this.foreign_key = foreign_key;
+                this.isUnique = unique;
+                this.isPrimaryKey = primary_key;
+                this.isForeignKey = foreign_key;
                 this.integrity = integrity;
-                this.references = references;
+                this.fkReferences = references;
                 this.description = description;
                 if (data_type.Equals("nvarchar") && length == 0) { length = 50; }
                 if (data_type.Equals("date")) { length = 0; }
-                if (length == 0)
-                {
-                    length_text = "";
-                }
-                if (length > 0)
-                {
-                    length_text = "(" + length + ")";
-                };
+               
             }
 
             public String column_and_key_gen()
             {
-                primary_keys = new List<String>();
-                foreign_keys = new List<String>();
+                primaryKeys = new List<String>();
+                foreignKeys = new List<String>();
                 String Column_text = "";
+                String length_text;
+                if (length == 0) { length_text = ""; }
+                else { length_text = "(" + length + ")"; }
                 Column_text = Column_text + column_name + "\t";
                 Column_text = Column_text + data_type + length_text + "\t";
-                if (nullable.Equals('Y') || nullable.Equals('y')) { Column_text = Column_text + "null\t"; }
+                if (isNullable) { Column_text = Column_text + "null\t"; }
                 else { Column_text = Column_text + "not null\t"; }
                 //if (auto_increment.Equals('Y') || auto_increment.Equals('y')) { Column_text = Column_text + "auto_increment\t"; }
-                if (unique.Equals('Y') || unique.Equals('y')) { Column_text = Column_text + "unique\t"; }
-                if (primary_key.Equals('Y') || primary_key.Equals('y')) { primary_keys.Add(column_name); }
-                if (foreign_key.Length > 1) { foreign_keys.Add(foreign_key); }
+                if (isUnique) { Column_text = Column_text + "unique\t"; }
+                if (isPrimaryKey) { primaryKeys.Add(column_name); }
+                if (isForeignKey) { foreignKeys.Add(fkReferences); }
                 Column_text = Column_text + "comment \'" + description + "\'\n";
                 return Column_text;
 
@@ -95,11 +92,14 @@ namespace Beck_Honors_SQL_Generator
             public String audit_column_gen()
             {
                 String Column_text = "";
+                String length_text;
+                if (length == 0) { length_text = ""; }
+                else { length_text = "(" + length + ")"; }
                 Column_text = Column_text + column_name + "\t";
                 Column_text = Column_text + data_type + length_text + "\t";
-                if (nullable.Equals('Y') || nullable.Equals('y')) { Column_text = Column_text + "null\t"; }
+                if (isNullable)  { Column_text = Column_text + "null\t"; }
                 else { Column_text = Column_text + "not null\t"; }
-                if (unique.Equals('Y') || unique.Equals('y')) { Column_text = Column_text + "unique\t"; }
+                if (isUnique) { Column_text = Column_text + "unique\t"; }
                 Column_text = Column_text + "comment \'" + description + "\'\n";
                 return Column_text;
 
@@ -128,7 +128,7 @@ namespace Beck_Honors_SQL_Generator
                 int count = 0;
                 foreach (Column c in columns)
                 {
-                    foreach (string s in c.primary_keys)
+                    foreach (string s in c.primaryKeys)
                     {
                         if (count > 0) { key_string = key_string + " , "; }
                         key_string = key_string + s;
@@ -145,7 +145,7 @@ namespace Beck_Honors_SQL_Generator
                 String output_keys = "";
                 foreach (Column c in columns)
                 {
-                    foreach (string s in c.foreign_keys)
+                    foreach (string s in c.foreignKeys)
                     {
                         String[] chunks = s.Split(' ');
                         String second_table = chunks[1];
@@ -217,7 +217,7 @@ namespace Beck_Honors_SQL_Generator
             }
             public String gen_update()
             {
-                String x = " ";
+                
                 String comment_text = comment_box_gen.comment_box(name, 3);
                 String function_text =
                      "DROP PROCEDURE IF EXISTS sp_update_" + name + ";\n"
@@ -228,8 +228,11 @@ namespace Beck_Honors_SQL_Generator
                 String comma = "";
                 foreach (Column c in columns)
                 {
+                    String length_text;
+                    if (c.length == 0) { length_text = ""; }
+                    else { length_text = "(" + c.length + ")"; }
                     if (count > 0) { comma = ","; }
-                    String add = comma + "in " + c.column_name + "_param " + c.data_type + c.length_text + "\n";
+                    String add = comma + "in " + c.column_name + "_param " + c.data_type + length_text + "\n";
                     function_text = function_text + add;
                     count++;
                 }
@@ -247,7 +250,7 @@ namespace Beck_Honors_SQL_Generator
                 foreach (Column c in columns)
                 {
                     if (count > 0) { comma = ","; }
-                    if (!c.primary_key.Equals('y') && !c.primary_key.Equals('Y'))
+                    if (!c.isPrimaryKey)
                     {
                         String add = comma + c.column_name + " = " + c.column_name + "_param\n";
                         function_text = function_text + add;
@@ -258,7 +261,7 @@ namespace Beck_Honors_SQL_Generator
                 String initial_word = "WHERE ";
                 foreach (Column c in columns)
                 {
-                    if (c.primary_key.Equals('y') || c.primary_key.Equals('Y'))
+                    if (c.isPrimaryKey)
                     {
                         if (keys_count > 0) { initial_word = "AND "; }
                         String add = initial_word + c.column_name + "=" + c.column_name + "_param\n";
@@ -298,10 +301,13 @@ namespace Beck_Honors_SQL_Generator
                 count = 0;
                 foreach (Column c in columns)
                 {
+                    String length_text;
+                    if (c.length == 0) { length_text = ""; }
+                    else { length_text = "(" + c.length + ")"; }
                     if (count > 0) { comma = ","; }
-                    if (c.primary_key.Equals('y') || c.primary_key.Equals('Y'))
+                    if (c.isPrimaryKey)
                     {
-                        String add = comma + c.column_name + "_param " + c.data_type + c.length_text + "\n";
+                        String add = comma + c.column_name + "_param " + c.data_type + length_text + "\n";
                         function_text = function_text + add;
                         count++;
                     }
@@ -321,7 +327,7 @@ namespace Beck_Honors_SQL_Generator
                 String initial_word = "WHERE ";
                 foreach (Column c in columns)
                 {
-                    if (c.primary_key.Equals('y') || c.primary_key.Equals('Y'))
+                    if (c.isPrimaryKey)
                     {
                         if (keys_count > 0) { initial_word = "AND "; }
                         String add = initial_word + c.column_name + "=" + c.column_name + "_param\n";
@@ -365,9 +371,12 @@ namespace Beck_Honors_SQL_Generator
                 foreach (Column c in columns)
                 {
                     if (count > 0) { comma = ","; }
-                    if (c.primary_key.Equals('y') || c.primary_key.Equals('Y'))
+                    String length_text;
+                    if (c.length == 0) { length_text = ""; }
+                    else { length_text = "(" + c.length + ")"; }
+                    if (c.isPrimaryKey)
                     {
-                        String add = comma + c.column_name + "_param " + c.data_type + c.length_text + "\n";
+                        String add = comma + c.column_name + "_param " + c.data_type + length_text + "\n";
                         function_text = function_text + add;
                         count++;
                     }
@@ -388,7 +397,7 @@ namespace Beck_Honors_SQL_Generator
                 int keys_count = 0;
                 foreach (Column c in columns)
                 {
-                    if (c.primary_key.Equals('y') || c.primary_key.Equals('Y'))
+                    if (c.isPrimaryKey)
                     {
                         if (keys_count > 0) { initial_word = "AND "; }
                         String add = initial_word + c.column_name + "=" + c.column_name + "_param\n";
@@ -409,7 +418,7 @@ namespace Beck_Honors_SQL_Generator
 
             public String gen_retreive_by_all()
             {
-                String gx = " ";
+                
                 String comment_text = comment_box_gen.comment_box(name, 6);
                 String function_text =
                      "DROP PROCEDURE IF EXISTS sp_retreive_by_all_" + name + ";\n"
@@ -448,8 +457,11 @@ namespace Beck_Honors_SQL_Generator
                 String comma = "";
                 foreach (Column c in columns)
                 {
+                    String length_text;
+                    if (c.length == 0) { length_text = ""; }
+                    else { length_text = "(" + c.length + ")"; }
                     if (count > 0) { comma = ","; }
-                    String add = comma + "in " + c.column_name + "_param " + c.data_type + c.length_text + "\n";
+                    String add = comma + "in " + c.column_name + "_param " + c.data_type + length_text + "\n";
                     function_text = function_text + add;
                     count++;
                 }
@@ -677,7 +689,7 @@ namespace Beck_Honors_SQL_Generator
         {
             public static List<table> all_tables = new List<table>();
         }
-        class comment_box_gen
+        public class comment_box_gen
         {
             //creates various commeent boxes based on table name and function type.
             public static String comment_box(String table, int type)

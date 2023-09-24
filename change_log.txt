@@ -21,3 +21,7 @@
 9/18/2023 1:09:16 PM	 Fixed enum error
 9/18/2023 1:09:29 PM	 added settings.table count to keep track of how many tables I have
 9/18/2023 1:09:55 PM	 added placeholder method settings.generatesettings()
+9/24/2023 1:36:28 PM	 Updated data objects to match work in ArgoUML
+9/24/2023 1:36:53 PM	 Changed many "char" character types to boolean to reflect true nature
+9/24/2023 1:37:07 PM	 Updated constructors to reflect these new boolean types
+9/24/2023 1:37:20 PM	 updated file read to reflect these new boolean types
