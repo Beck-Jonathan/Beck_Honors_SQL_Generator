@@ -14,13 +14,25 @@ namespace Beck_Honors_SQL_Generator
                 String database_name = settings.databaseName;
                 String header_text = "DROP DATABASE IF EXISTS " + database_name + ";\n"
                     + "CREATE DATABASE " + database_name + ";\n"
-                    + "USE " + database_name + ";\n";
+                    + "USE " + database_name + ";\n"
+                    +"Generated on " + DateTime.Now.ToString();
                 return header_text;
             }
             
             public static int tableCount() {
                 return allTables.Count;
 
+            }
+            public static String print_database_header()
+            {
+                //Databae header to ensure we don't run into conflicts.
+                String go = "";
+                if (settings.TSQLMode) { go = "\nGO"; }
+                String database_name = settings.databaseName;
+                String header_text = "DROP DATABASE IF EXISTS " + database_name + ";" + go + "\n"
+                    + "CREATE DATABASE " + database_name + ";" + go + "\n"
+                    + "USE " + database_name + ";" + go + "\n";
+                return header_text;
             }
         }
         public class Column
@@ -90,7 +102,12 @@ namespace Beck_Honors_SQL_Generator
                 if (isUnique) { Column_text = Column_text + "unique\t"; }
                 if (isPrimaryKey) { primaryKeys.Add(column_name); }
                 if (isForeignKey) { foreignKeys.Add(fkReferences); }
-                Column_text = Column_text + "comment \'" + description + "\'\n";
+                if (settings.TSQLMode)
+                {
+                    Column_text = Column_text + "\n";
+                }
+
+                else { Column_text = Column_text + "comment \'" + description + "\'\n"; }
                 return Column_text;
 
             }
@@ -120,10 +137,13 @@ namespace Beck_Honors_SQL_Generator
             public List<Column> columns { set; get; }
             public List<String> primary_keys { set; get; }
             public List<String> foreign_keys { set; get; }
+            public bool isLine { set; get; }
             public table(String name, List<Column> Columns)
             {
                 this.name = name;
-                this.columns = columns;
+                this.columns = Columns;
+                if (name.ToLower().Contains("_line")) { isLine = true; }
+                else { isLine = false; }
 
             }
 
@@ -153,7 +173,7 @@ namespace Beck_Honors_SQL_Generator
                 {
                     foreach (string s in c.foreignKeys)
                     {
-                        String[] chunks = s.Split(' ');
+                        String[] chunks = s.Split('.');
                         String second_table = chunks[1];
                         String formatted_key = ",CONSTRAINT " + name + "_" + second_table + " foreign key (" + c.column_name + ") " + s + "\n";
 

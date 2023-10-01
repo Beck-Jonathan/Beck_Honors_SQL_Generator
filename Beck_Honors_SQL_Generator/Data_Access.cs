@@ -104,11 +104,10 @@ namespace Beck_Honors_SQL_Generator
                 if (parts[1].Length > 0)
                 {
                     //remove any extra punctionation excel added and setup various variables
-                    String Column_name = parts[0].Replace("\"", "");
+                    String Column_name = parts[0].Replace("\"", "").Trim(); 
                     int length;
                     int start;
-                    int increment;
-                    
+                    int increment;                 
 
                     //read each part of the Column 
                     String data_type = parts[1].Replace("\"", "");
@@ -119,20 +118,20 @@ namespace Beck_Honors_SQL_Generator
                     Boolean isUnique = false;
                     Boolean isPrimaryKey= false;
                     Boolean isForeignKey = false;
-                    if (parts[4].Equals("y") || parts[4].Equals("Y")) { isIdentity = true; }
+                    if (parts[4].Equals("yes") || parts[4].Equals("Yes")) { isIdentity = true; }
                     
                     Int32.TryParse(parts[5], out start);
                     Int32.TryParse(parts[6], out increment);
 
                     //nullable relates to parts 7
-                    if (parts[7].Equals("y") || parts[7].Equals("Y")) { isNullable = true; }
+                    if (parts[7].Equals("yes") || parts[7].Equals("Yes")) { isNullable = true; }
                     String index = parts[8];
                     //unique relates to parts 9
-                    if (parts[9].Equals("y") || parts[9].Equals("Y")) { isUnique = true; }
+                    if (parts[9].Equals("yes") || parts[9].Equals("Yes")) { isUnique = true; }
                     //pk relates to parts 10
-                    if (parts[10].Equals("y") || parts[10].Equals("Y")) { isPrimaryKey = true; }
+                    if (parts[10].Equals("Yes") || parts[10].Equals("yes")) { isPrimaryKey = true; }
                     //fk releates to parts 11
-                    if (parts[11].Equals("y") || parts[11].Equals("Y")) { isForeignKey = true; }
+                    if (parts[11].Equals("Yes") || parts[11].Equals("yes")) { isForeignKey = true; }
 
 
 
@@ -149,7 +148,7 @@ namespace Beck_Honors_SQL_Generator
 
             }
             //figure out how many tables were created
-            //settings.table_count = data_tables.all_tables.Count;
+            settings.table_count = database.allTables.Count;
             //generate default options for all tables
             settings.generate_options();
         }

@@ -26,3 +26,8 @@
 9/24/2023 1:37:07 PM	 Updated constructors to reflect these new boolean types
 9/24/2023 1:37:20 PM	 updated file read to reflect these new boolean types
 9/24/2023 1:50:03 PM	 refactored database object to reflect argoUML work
+9/30/2023 4:33:44 PM	 Adding read file functionality
+9/30/2023 4:33:49 PM	 Drafting UI
+9/30/2023 4:33:59 PM	 Adding default settings to drop downs
+9/30/2023 4:41:49 PM	 added pathing for buttons
+9/30/2023 4:55:08 PM	 adding rudamentary tsql ideas
